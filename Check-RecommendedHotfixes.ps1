@@ -20,6 +20,12 @@ Date: December 17th, 2015
 $global:TotalUpdatesNeeded = 0
 $global:Description = $null
 $KB2003 = 'KB955360','KB981263','KB933061','KB981574','KB982168','KB982167','KB932370' # We do not check for KB968760 because it has been replaced by KB981574, and not KB980773 because it is uncluded in KB982168
+# Download link for KB981263:
+# http://hotfixv4.microsoft.com/Windows Server 2003/sp3/Fix311105/3790/free/407743_ENU_i386_zip.exe
+# http://hotfixv4.microsoft.com/Windows Server 2003/sp3/Fix311105/3790/free/407767_ENU_x64_zip.exe
+# Download link for KB960718:
+# http://hotfixv4.microsoft.com/Windows Server 2003/sp3/Fix248074/3790/free/367195_ENU_i386_zip.exe
+# http://hotfixv4.microsoft.com/Windows Server 2003/sp3/Fix248074/3790/free/367193_ENU_x64_zip.exe
 $KB2003NET4 = 'KB2484832'
 $KB2003IIS = 'KB960718'
 $KB2008 = 'KB968967','KB2553708','KB2710558','KB2458331','KB2812950','KB2622802','KB979458','KB981263' # We do not check for KB2495300 because KB2710558 is recommended instead, and not KB2506143 because this is the WMF 3.0 update and it is not compatible with applications like sharepoint 2010, exhcange 2010 so carefull consideration must apply
