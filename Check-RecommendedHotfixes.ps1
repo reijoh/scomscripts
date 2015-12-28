@@ -57,7 +57,7 @@ Function Update-ServicePackNeeded
     If($BuildNumber)
     {
         $CSDBuildNumber = Invoke-Command -ComputerName $ComputerName -ErrorAction SilentlyContinue -ScriptBlock {(Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -ErrorAction SilentlyContinue | select @{N='CSDBuildNumber'; E={$_.CSDBuildNumber}}).CSDBuildNumber}
-        If(!($CSDBuildNumber)
+        If(!($CSDBuildNumber))
         {
             $CSDBuildNumber = '9999'
         }
@@ -68,7 +68,7 @@ Function Update-ServicePackNeeded
         $BuildNumber = ''
     }
     $CSDVersion = Invoke-Command -ComputerName $ComputerName -ErrorAction SilentlyContinue -ScriptBlock {(Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -ErrorAction SilentlyContinue | select @{N='CSDVersion'; E={$_.CSDVersion}}).CSDVersion}
-    If($CSDVersion -notmatch 'Service Pack \d'
+    If($CSDVersion -notmatch 'Service Pack \d')
     {
         $CSDVersion = ''
     }
