@@ -54,8 +54,24 @@ Function Update-ServicePackNeeded
         [string]$Version,
         [string]$ComputerName
     )
-    $CSDBuildNumber = Invoke-Command -ComputerName $ComputerName -ErrorAction SilentlyContinue -ScriptBlock {(Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -ErrorAction SilentlyContinue | select @{N='CSDBuildNumber'; E={$_.CSDBuildNumber}}).CSDBuildNumber}
+    If($BuildNumber)
+    {
+        $CSDBuildNumber = Invoke-Command -ComputerName $ComputerName -ErrorAction SilentlyContinue -ScriptBlock {(Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -ErrorAction SilentlyContinue | select @{N='CSDBuildNumber'; E={$_.CSDBuildNumber}}).CSDBuildNumber}
+        If(!($CSDBuildNumber)
+        {
+            $CSDBuildNumber = '9999'
+        }
+    }
+    else
+    {
+        $CSDBuildNumber = ''
+        $BuildNumber = ''
+    }
     $CSDVersion = Invoke-Command -ComputerName $ComputerName -ErrorAction SilentlyContinue -ScriptBlock {(Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -ErrorAction SilentlyContinue | select @{N='CSDVersion'; E={$_.CSDVersion}}).CSDVersion}
+    If($CSDVersion -notmatch 'Service Pack \d'
+    {
+        $CSDVersion = ''
+    }
     If($CSDBuildNumber -lt $BuildNumber -or $CSDVersion -lt $Version)
     {
         $global:Description += "$ComputerName need $Version`r`n"
@@ -96,7 +112,7 @@ foreach($Computer in $ComputerName)
     {
         '2003'
         {
-            Update-ServicePackNeeded -BuildNumber '5583' -Version 'Service Pack 2' -ComputerName $Computer
+            Update-ServicePackNeeded -Version 'Service Pack 2' -ComputerName $Computer
             foreach($KB in $KB2003)
             {
                 Update-HotfixNeeded -HotfixID $KB -ComputerName $Computer
