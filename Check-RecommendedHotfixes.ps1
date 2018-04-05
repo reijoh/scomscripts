@@ -10,33 +10,25 @@ Adjusted based on modified version by Christopher Keyaert (christopher@vnext.be)
 Date: December 11th, 2015
 https://www.vnext.be/2015/12/11/scom-agentos-recommended-hotfix-kb/
  
-Based on the KB list available https://support.microsoft.com/en-us/kb/2843219
-Based on the KB list available http://blogs.technet.com/b/kevinholman/archive/2009/01/27/which-hotfixes-should-i-apply.aspx
+Based on the KB list available at:
+http://blogs.technet.com/b/kevinholman/archive/2009/01/27/which-hotfixes-should-i-apply.aspx
+
+Another source to look at for additional hotfix recommendations:
+https://support.microsoft.com/en-us/help/2843219/system-center-2012-operations-manager-recommended-agent-operating-syst
 
 Modified again by Reidar Johansen (@reidartwitt)
-Date: December 17th, 2015
+Date: April 4th, 2018
 #>
 # Global Variables
 $global:TotalUpdatesNeeded = 0
 $global:Description = $null
-$KB2003 = 'KB955360','KB981263','KB933061','KB981574','KB982168','KB982167','KB932370' # We do not check for KB968760 because it has been replaced by KB981574, and not KB980773 because it is uncluded in KB982168
-# Download link for KB981263:
-# http://hotfixv4.microsoft.com/Windows Server 2003/sp3/Fix311105/3790/free/407743_ENU_i386_zip.exe
-# http://hotfixv4.microsoft.com/Windows Server 2003/sp3/Fix311105/3790/free/407767_ENU_x64_zip.exe
-# Download link for KB960718:
-# http://hotfixv4.microsoft.com/Windows Server 2003/sp3/Fix248074/3790/free/367195_ENU_i386_zip.exe
-# http://hotfixv4.microsoft.com/Windows Server 2003/sp3/Fix248074/3790/free/367193_ENU_x64_zip.exe
-$KB2003NET4 = 'KB2484832'
-$KB2003IIS = 'KB960718'
-$KB2008 = 'KB968967','KB2553708','KB2710558','KB2458331','KB2812950','KB2622802','KB979458','KB981263' # We do not check for KB2495300 because KB2710558 is recommended instead, and not KB2506143 because this is the WMF 3.0 update and it is not compatible with applications like sharepoint 2010, exhcange 2010 so carefull consideration must apply
-$KB2008NET4 = 'KB2484832'
+$KB2003 = 'KB955360','KB981263','KB933061','KB982167','KB932370'
+$KB2008 = 'KB968967','KB981263','KB2710558','KB2812950'
 $KB2008ClusSvc = 'KB968936'
-$KB2008DFSR = 'KB973275'
-$KB2008IIS = 'KB2163398'
-$KB2008R2 = 'KB2470949','KB2547244','KB2775511','KB2732673','KB2728738','KB2878378','KB2617858','KB2494158','KB2734909','KB2622802','KB2692929' # We do not check for KB2618982 on every server, only if IIS is installed
+$KB2008R2 = 'KB2470949','KB2547244','KB2878378','KB2734909','KB2692929'
 $KB2008R2IIS = 'KB2618982'
-$KB2012 = 'KB2790831','KB2911101'
-$KB2012R2 = 'KB2911106','KB2919394','KB2955164' # We do not check for KB2923126 because it is included in update rollup KB2919394, and not KB2954185 because it is included in update rollup KB2955164
+$KB2012 = 'KB2790831'
+$KB2012R2 = 'KB2919394','KB2955164' # We do not check for KB2923126 because it is included in update rollup KB2919394, and not KB2954185 because it is included in update rollup KB2955164
 Function Update-HotfixNeeded
 {
     param
@@ -123,22 +115,6 @@ foreach($Computer in $ComputerName)
             {
                 Update-HotfixNeeded -HotfixID $KB -ComputerName $Computer
             }
-            # Only check if .NET Framework 4.0 is installed
-            If(Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP' -Recurse|Get-ItemProperty -name Version -EA 0|where{ $_.PSChildName -match '^(?!S)\p{L}' -and $_.Version -match '^4.0'})
-            {
-                foreach($KB in $KB2003NET4)
-                {
-                    Update-HotfixNeeded -HotfixID $KB -ComputerName $Computer
-                }
-            }
-            # Only check if IIS is installed
-            If(Get-Service -Name W3SVC -ComputerName $Computer -ErrorAction SilentlyContinue)
-            {
-                foreach($KB in $KB2003IIS)
-                {
-                    Update-HotfixNeeded -HotfixID $KB -ComputerName $Computer
-                }
-            }
         }
         '2008'
         {
@@ -147,34 +123,10 @@ foreach($Computer in $ComputerName)
             {
                 Update-HotfixNeeded -HotfixID $KB -ComputerName $Computer
             }
-            # Only check if .NET Framework 4.0 is installed
-            If(Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP' -Recurse|Get-ItemProperty -name Version -EA 0|where{ $_.PSChildName -match '^(?!S)\p{L}' -and $_.Version -match '^4.0'})
-            {
-                foreach($KB in $KB2008NET4)
-                {
-                    Update-HotfixNeeded -HotfixID $KB -ComputerName $Computer
-                }
-            }
             # Only check if Failover Clustering feature is installed
             If(Get-Service -Name ClusSvc -ComputerName $Computer -ErrorAction SilentlyContinue)
             {
                 foreach($KB in $KB2008ClusSvc)
-                {
-                    Update-HotfixNeeded -HotfixID $KB -ComputerName $Computer
-                }
-            }
-            # Only check if DFS Replication feature is installed
-            If(Get-Service -Name dfsr -ComputerName $Computer -ErrorAction SilentlyContinue)
-            {
-                foreach($KB in $KB2008DFSR)
-                {
-                    Update-HotfixNeeded -HotfixID $KB -ComputerName $Computer
-                }
-            }
-            # Only check if IIS is installed
-            If(Get-Service -Name W3SVC -ComputerName $Computer -ErrorAction SilentlyContinue)
-            {
-                foreach($KB in $KB2008IIS)
                 {
                     Update-HotfixNeeded -HotfixID $KB -ComputerName $Computer
                 }
