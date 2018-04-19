@@ -152,7 +152,7 @@ if(Test-Path -Path $($Path.FullName) -PathType Container)
             $reportviewerInstalled = $reportviewerInstalled | Sort-Object DisplayVersion -Descending | Select-Object -First 1;
             $status = 'version ' + $reportviewerInstalled.DisplayVersion + ' has already been installed';
         };
-    # Get Product Name of installed Microsoft Report Viewer 2015 Runtime
+        # Get Product Name of installed Microsoft Report Viewer 2015 Runtime
         $reportviewerInstalledProductName = if($reportviewerInstalled){$reportviewerInstalled.DisplayName} else {''};
         # Get Product Year of installed Microsoft Report Viewer 2015 Runtime
         $reportviewerInstalledProductYear = if($reportviewerInstalledProductName){$reportviewerInstalledProductName.Substring($reportviewerInstalledProductName.Length-4);} else {0};
