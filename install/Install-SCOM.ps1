@@ -8,6 +8,8 @@ param
 
     [switch]$FirstManagementServer,
 
+    [switch]$NoInstallation,
+
     [string]$Components = 'OMServer', # 'OMServer,OMConsole,OMWebConsole,OMReporting'
 
     [string]$ManagementGroupName,
@@ -1116,6 +1118,7 @@ $arglist += @(
 );
 Write-Host "Installation will be performed with the following parameters:"
 $arglist;
+if($NoInstallation){return};
 Start-Process -FilePath $SetupPath -ArgumentList $arglist -Wait;
 Start-Process -FilePath $env:systemdrive\SCOM2016\setup.exe -ArgumentList $arglist -Wait;
 Write-Host "Verify installation log $($env:LOCALAPPDATA)\SCOM\LOGS\OpsMgrSetupWizard.txt";
