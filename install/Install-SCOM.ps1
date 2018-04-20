@@ -1,12 +1,12 @@
 # TODO: Ensure local Administrators group membership
 param
 (
-    [Parameter(Mandatory=$false)]
+    [Parameter(Mandatory=$true)]
     [ValidateNotNull()]
     [ValidateScript({Test-Path -PathType Leaf})]
     [string]$SetupPath,
 
-    [bool]$FirstManagementServer = $true,
+    [switch]$FirstManagementServer,
 
     [string]$Components = 'OMServer', # 'OMServer,OMConsole,OMWebConsole,OMReporting'
 
